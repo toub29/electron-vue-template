@@ -1,5 +1,6 @@
 {
-  "name": "electron-vue-template",
+  "name": "api-navigator",
+  "productName": "API Navigator",
   "version": "0.1.0",
   "description": "A minimal Electron + Vue application",
   "main": "main/main.js",

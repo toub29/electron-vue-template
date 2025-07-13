@@ -3,16 +3,13 @@ import {join} from 'path';
 import axios, {AxiosRequestConfig} from "axios";
 import MenuHandler, {menu as menuTemplate} from "./menu/menu"
 import {clickProxy} from "./menu/proxyAction";
+import {loadProxySettings, saveProxySettings} from "./conf/db";
 
+const proxyBypassRules = 'localhost, 127.0.0.1';
 const clickHandler: MenuHandler[] = []
 
 // Gardez une référence à la fenêtre principale pour pouvoir l'utiliser comme parent
 let mainWindow: BrowserWindow | null;
-let proxyConfig: { enabled: boolean, address: string, port: string } = {
-    enabled: false,
-    address: '127.0.0.1',
-    port: '8080',
-}
 
 function createWindow() {
     mainWindow = new BrowserWindow({ // Assigner à la variable globale
@@ -39,11 +36,12 @@ app.whenReady().then(async () => {
 
     const menu = Menu.buildFromTemplate(menuTemplate(clickHandler));
     Menu.setApplicationMenu(menu);
+    const proxyConfig = loadProxySettings();
     if (proxyConfig.enabled) {
         const proxyRules = `${proxyConfig.address}:${proxyConfig.port}`;
         await session.defaultSession.setProxy({
             proxyRules: proxyRules,
-            proxyBypassRules: 'localhost, 127.0.0.1'
+            proxyBypassRules: proxyBypassRules
         });
         console.log(`Proxy chargé depuis la configuration : ${proxyRules}`);
     }
@@ -71,13 +69,14 @@ app.on('window-all-closed', function () {
 
 // Appliquer la configuration du proxy
 ipcMain.handle('proxy:set', async (event, config: { enabled: boolean, address: string, port: string }) => {
-    proxyConfig = config;
+    saveProxySettings(config);
     console.log('proxy:set', event, config);
+
     if (config.enabled && config.address && config.port) {
         const proxyRules = `${config.address}:${config.port}`;
         await session.defaultSession.setProxy({
             proxyRules: proxyRules,
-            proxyBypassRules: 'localhost, 127.0.0.1' // Ne pas utiliser le proxy pour les adresses locales
+            proxyBypassRules: proxyBypassRules // Ne pas utiliser le proxy pour les adresses locales
         });
         console.log(`Proxy activé : ${proxyRules}`);
     } else {
@@ -89,16 +88,14 @@ ipcMain.handle('proxy:set', async (event, config: { enabled: boolean, address: s
 
 // Récupérer la configuration actuelle du proxy
 ipcMain.handle('proxy:get', () => {
-    return proxyConfig
+    return loadProxySettings()
 });
 
-ipcMain.on('message', (event, message) => {
-    console.log(message);
-})
 
 ipcMain.handle('http:request', async (event, options: AxiosRequestConfig) => {
     // Créer une copie pour ne pas modifier l'original
     const requestOptions: AxiosRequestConfig = {...options};
+    const proxyConfig = loadProxySettings();
     if (proxyConfig.enabled && proxyConfig.address && proxyConfig.port) {
         console.log(`Utilisation du proxy pour la requête : ${proxyConfig.address}:${proxyConfig.port}`);
         requestOptions.proxy = {
