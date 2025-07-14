@@ -37,29 +37,6 @@ html, body, #app {
     --close-btn-hover-bg: #d4d6da;
 }
 
-/* Thème Sombre */
-.dark-theme {
-    --bg-primary: #1c1c1e;
-    --bg-secondary: #2c2c2e;
-    --bg-tertiary: #3a3a3c;
-    --bg-input: #3a3a3c;
-    --bg-code: #2c2c2e;
-
-    --text-primary: #e4e6eb;
-    --text-secondary: #b0b3b8;
-    --text-placeholder: #8a8d91;
-
-    --border-color: #3a3a3c;
-    --border-input: #4a4a4c;
-
-    --accent-color: #0a84ff;
-    --accent-text-color: #ffffff;
-
-    --button-disabled-bg: #004182;
-    --close-btn-hover-bg: #5a5a5c;
-}
-
-
 /* ================================================================== */
 /*                  VOS STYLES GLOBAUX EXISTANTS                      */
 /* ================================================================== */

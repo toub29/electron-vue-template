@@ -12,3 +12,9 @@ export interface TabState {
     loading: boolean;
     error: string | null;
 }
+
+export interface CollectionState {
+    id: string; // Utiliser un string (ex: UUID) est plus robuste
+    name: string;
+    requests: TabState[];
+}

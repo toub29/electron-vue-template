@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
 import {useRequestsStore} from "../../store/requests";
-import {computed} from "vue";
+import {methodsWithBody} from "../../utils/Util";
 
-const methodsWithBody = ['POST', 'PUT', 'PATCH'];
-const {requests: tabs} = storeToRefs(useRequestsStore())
-const {activeTabId} = storeToRefs(useRequestsStore())
-
-const activeTab = computed(() => {
-  if (activeTabId.value === null) return null;
-  return tabs.value.find(tab => tab.id === activeTabId.value) || null;
-});
+const requestsStore = useRequestsStore();
+// On récupère directement le getter `activeTab`
+const { activeTab } = storeToRefs(requestsStore);
 </script>
 
 <template>
   <!-- Panneau du corps de la requête -->
-  <div v-if="activeTab && methodsWithBody.includes(activeTab.method!!)" class="body-panel">
+  <div v-if="activeTab && methodsWithBody.includes(activeTab.method)" class="body-panel">
     <div class="content-type-selector">
       <label for="content-type">Content-Type:</label>
       <select id="content-type" v-model="activeTab.contentType">

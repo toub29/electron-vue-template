@@ -12,19 +12,8 @@ export const menu = (clickHandler: MenuHandler[]): MenuItemConstructorOptions[] 
             {
                 label: 'Quitter',
                 accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Alt+F4',
-                role: 'quit' // Utilise le comportement natif pour quitter
+                role: 'quit'
             }
-        ]
-    },
-    {
-        label: 'Éditer',
-        submenu: [
-            {label: 'Annuler', role: 'undo'},
-            {label: 'Rétablir', role: 'redo'},
-            {type: 'separator'},
-            {label: 'Couper', role: 'cut'},
-            {label: 'Copier', role: 'copy'},
-            {label: 'Coller', role: 'paste'},
         ]
     },
     {
@@ -36,7 +25,6 @@ export const menu = (clickHandler: MenuHandler[]): MenuItemConstructorOptions[] 
             {label: 'Outils de développement', role: 'toggleDevTools'}
         ]
     },
-    // 2. Notre nouveau menu "Proxy"
     {
         label: 'Proxy',
         submenu: [

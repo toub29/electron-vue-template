@@ -1,10 +1,6 @@
 <script setup lang="ts">
 // Le script reste identique, il est déjà parfait.
-import {ref, onMounted, computed, reactive} from 'vue';
-import {useRequestsStore} from "../store/requests";
-import {storeToRefs} from "pinia";
-
-const {theme} = storeToRefs(useRequestsStore());
+import {computed, onMounted, reactive, ref} from 'vue';
 
 const formState = reactive({
   enabled: false,
@@ -53,8 +49,7 @@ const resetChanges = () => {
 </script>
 
 <template>
-  <!-- Le template est simplifié : plus de div "proxy-card" -->
-  <div class="proxy-page" :class="`${theme}-theme`">
+  <div class="proxy-page">
     <h3>Configuration du Proxy</h3>
 
     <div class="form-group toggle-group">

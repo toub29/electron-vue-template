@@ -4,6 +4,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import MenuHandler, {menu as menuTemplate} from "./menu/menu"
 import {clickProxy} from "./menu/proxyAction";
 import {loadProxySettings, saveProxySettings} from "./conf/db";
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 const proxyBypassRules = 'localhost, 127.0.0.1';
 const clickHandler: MenuHandler[] = []
@@ -31,6 +32,12 @@ function createWindow() {
 }
 
 app.whenReady().then(async () => {
+    if (!app.isPackaged) { // On installe uniquement si l'app n'est pas en production
+        installExtension(VUEJS_DEVTOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            .catch((err) => console.log('An error occurred: ', err));
+    }
+
     createWindow();
     clickHandler.push({name: 'proxy', handler: clickProxy(mainWindow)})
 
